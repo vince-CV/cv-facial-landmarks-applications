@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Facial_Landmarks", "Facial_Landmarks\Facial_Landmarks.vcxproj", "{030E17EA-87BC-488C-AEE9-463F770F3F04}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{030E17EA-87BC-488C-AEE9-463F770F3F04}.Debug|x64.ActiveCfg = Debug|x64
+		{030E17EA-87BC-488C-AEE9-463F770F3F04}.Debug|x64.Build.0 = Debug|x64
+		{030E17EA-87BC-488C-AEE9-463F770F3F04}.Debug|x86.ActiveCfg = Debug|Win32
+		{030E17EA-87BC-488C-AEE9-463F770F3F04}.Debug|x86.Build.0 = Debug|Win32
+		{030E17EA-87BC-488C-AEE9-463F770F3F04}.Release|x64.ActiveCfg = Release|x64
+		{030E17EA-87BC-488C-AEE9-463F770F3F04}.Release|x64.Build.0 = Release|x64
+		{030E17EA-87BC-488C-AEE9-463F770F3F04}.Release|x86.ActiveCfg = Release|Win32
+		{030E17EA-87BC-488C-AEE9-463F770F3F04}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BECB8354-675B-42C2-857A-18AF54F3F07F}
+	EndGlobalSection
+EndGlobal
