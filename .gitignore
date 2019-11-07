@@ -1,10 +1,9 @@
 .git
 dlib/
-data/images/
-data/models/
 data/.gitkeep
 data/
 cpp/codes/
+cpp/codes/results/
 cpp/Facial_Landmarks/.vs
 cpp/Facial_Landmarks/x64
 cpp/Facial_Landmarks/Facial_Landmarks.sln
