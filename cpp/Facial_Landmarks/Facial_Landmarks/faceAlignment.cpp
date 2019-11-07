@@ -1,15 +1,12 @@
 #include "faceBlendCommon.h"
 
 
-int main(int argc, char** argv)
+int faceAlignment(int argc, char** argv)
 {
-
 	dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
 	dlib::shape_predictor landmarkDetector;
 
-
 	dlib::deserialize("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/models/shape_predictor_5_face_landmarks.dat") >> landmarkDetector;
-
 
 	Mat im = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/39.png");
 	vector<Point2f> points = getLandmarks(faceDetector, landmarkDetector, im);
@@ -17,7 +14,6 @@ int main(int argc, char** argv)
 	im.convertTo(im, CV_32FC3, 1 / 255.0);
 
 	Size size(300, 300);
-
 	Mat imNorm;
 
 	normalizeImagesAndLandmarks(size, im, imNorm, points, points);

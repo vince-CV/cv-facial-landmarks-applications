@@ -2,25 +2,18 @@
 #include <opencv2/opencv.hpp>
 
 
-void drawPolyline
-(
-	cv::Mat &img,
-	const dlib::full_object_detection& landmarks,
-	const int start,
-	const int end,
-	bool isClosed = false
-)
+static void drawPolyline(cv::Mat &img, const dlib::full_object_detection& landmarks, const int start, const int end, bool isClosed = false)
 {
 	std::vector <cv::Point> points;
 	for (int i = start; i <= end; ++i)
 	{
 		points.push_back(cv::Point(landmarks.part(i).x(), landmarks.part(i).y()));
 	}
-	cv::polylines(img, points, isClosed, cv::Scalar(255, 200, 0), 2, 16);
+	cv::polylines(img, points, isClosed, cv::Scalar(255, 200, 0), 2, 16); // link points into a line
 
 }
 
-void renderFace(cv::Mat &img, const dlib::full_object_detection& landmarks)
+static void renderFace(cv::Mat &img, const dlib::full_object_detection& landmarks)
 {
 	drawPolyline(img, landmarks, 0, 16);      
 	drawPolyline(img, landmarks, 17, 21);       
@@ -34,8 +27,7 @@ void renderFace(cv::Mat &img, const dlib::full_object_detection& landmarks)
 
 }
 
-
-void renderFace(cv::Mat &img, const std::vector<cv::Point2f> &points,cv::Scalar color, int radius = 3) 
+static void renderFace(cv::Mat &img, const std::vector<cv::Point2f> &points, cv::Scalar color, int radius = 3) 
 {
 	for (int i = 0; i < points.size(); i++)
 	{

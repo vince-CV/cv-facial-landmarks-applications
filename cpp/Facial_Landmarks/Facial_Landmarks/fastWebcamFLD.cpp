@@ -15,7 +15,7 @@ using namespace std;
 #define OPENCV_FACE_RENDER
 
 
-int fastWebcamFLD()
+int main()
 {
 	try
 	{
@@ -111,4 +111,6 @@ int fastWebcamFLD()
 	{
 		cout << e.what() << endl;
 	}
+
+	return 0;
 }

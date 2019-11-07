@@ -16,7 +16,6 @@ using namespace std;
 
 void constrainPoint(Point2f &p, Size sz)
 {
-	// Constrains points to be inside boundary
 	p.x = min(max((double)p.x, 0.0), (double)(sz.width - 1)); 
 	p.y = min(max((double)p.y, 0.0), (double)(sz.height - 1));
 
@@ -25,7 +24,6 @@ void constrainPoint(Point2f &p, Size sz)
 
 void getEightBoundaryPoints(Size size, vector<Point2f>& boundaryPts)
 {
-	// Returns 8 points on the boundary of a rectangle
 	int h = size.height, w = size.width;
 	boundaryPts.push_back(Point2f(0, 0));
 	boundaryPts.push_back(Point2f(w / 2, 0));
@@ -40,7 +38,6 @@ void getEightBoundaryPoints(Size size, vector<Point2f>& boundaryPts)
 
 void dlibLandmarksToPoints(dlib::full_object_detection &landmarks, vector<Point2f>& points)
 {
-	// Converts landmarks into a vector for Point2f
 	for (int i = 0; i < landmarks.num_parts(); i++)
 	{
 		Point2f pt(landmarks.part(i).x(), landmarks.part(i).y());
@@ -100,7 +97,6 @@ void normalizeImagesAndLandmarks(Size outSize, Mat &imgIn, Mat &imgOut, vector<P
 
 }
 
-// In a vector of points, find the index of point closest to input point.
 static int findIndex(vector<Point2f>& points, Point2f &point)
 {
 	int minIndex = 0;
@@ -135,10 +131,8 @@ static void calculateDelaunayTriangles(Rect rect, vector<Point2f> &points, vecto
 
 	for (size_t i = 0; i < triangleList.size(); i++)
 	{
-
 		Vec6f t = triangleList[i];
 
-		// Store triangle as a vector of three points
 		pt[0] = Point2f(t[0], t[1]);
 		pt[1] = Point2f(t[2], t[3]);
 		pt[2] = Point2f(t[4], t[5]);
@@ -146,28 +140,21 @@ static void calculateDelaunayTriangles(Rect rect, vector<Point2f> &points, vecto
 
 		if (rect.contains(pt[0]) && rect.contains(pt[1]) && rect.contains(pt[2]))
 		{
-			// Find the index of each vertex in the points list
 			for (int j = 0; j < 3; j++)
 			{
 				ind[j] = findIndex(points, pt[j]);
 			}
-			// Store triangulation as a list of indices
 			delaunayTri.push_back(ind);
 		}
 	}
 
 }
 
-// Apply affine transform calculated using srcTri and dstTri to src
 void applyAffineTransform(Mat &warpImage, Mat &src, vector<Point2f> &srcTri, vector<Point2f> &dstTri)
 {
-	// Given a pair of triangles, find the affine transform.
 	Mat warpMat = getAffineTransform(srcTri, dstTri);
-
-	// Apply the Affine Transform just found to the src image
 	warpAffine(src, warpImage, warpMat, warpImage.size(), INTER_LINEAR, BORDER_REFLECT_101);
 }
-
 
 void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2f> t2)
 {
@@ -179,7 +166,6 @@ void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2f> t2)
 	vector<Point> t2RectInt;
 	for (int i = 0; i < 3; i++)
 	{
-		//tRect.push_back( Point2f( t[i].x - r.x, t[i].y -  r.y) );
 		t2RectInt.push_back(Point((int)(t2[i].x - r2.x), (int)(t2[i].y - r2.y))); // for fillConvexPoly
 
 		t1Rect.push_back(Point2f(t1[i].x - r1.x, t1[i].y - r1.y));
@@ -190,7 +176,6 @@ void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2f> t2)
 	Mat mask = Mat::zeros(r2.height, r2.width, CV_32FC3);
 	fillConvexPoly(mask, t2RectInt, Scalar(1.0, 1.0, 1.0), 16, 0);
 
-	// Apply warpImage to small rectangular patches
 	Mat img1Rect, img2Rect;
 	img1(r1).copyTo(img1Rect);
 
@@ -205,8 +190,6 @@ void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2f> t2)
 
 }
 
-
-// Compare dlib rectangle
 bool rectAreaComparator(dlib::rectangle &r1, dlib::rectangle &r2)
 {
 	return r1.area() < r2.area();
