@@ -1,15 +1,1 @@
-.vs/
-.git
-
-dlib/
-
-cpp/Facial_Landmarks/.vs
-cpp/Facial_Landmarks/x64
-cpp/Facial_Landmarks/Facial_Landmarks/x64
-cpp/Facial_Landmarks/Facial_Landmarks/Facial_Landmarks.vcxproj
-cpp/Facial_Landmarks/Facial_Landmarks/Facial_Landmarks.vcxproj.user
-cpp/Facial_Landmarks/Facial_Landmarks/Facial_Landmarks.vcxproj.filters
-
-data/models
-data/images
 
