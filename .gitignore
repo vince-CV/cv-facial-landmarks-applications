@@ -3,6 +3,7 @@ dlib/
 data/images/
 data/models/
 data/.gitkeep
+data/
 cpp/codes/
 cpp/Facial_Landmarks/.vs
 cpp/Facial_Landmarks/x64
