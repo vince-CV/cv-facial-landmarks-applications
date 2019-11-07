@@ -13,17 +13,19 @@ using namespace std;
 #endif
 
 
-// Constrains points to be inside boundary
+
 void constrainPoint(Point2f &p, Size sz)
 {
-	p.x = min(max((double)p.x, 0.0), (double)(sz.width - 1));
+	// Constrains points to be inside boundary
+	p.x = min(max((double)p.x, 0.0), (double)(sz.width - 1)); 
 	p.y = min(max((double)p.y, 0.0), (double)(sz.height - 1));
 
 }
 
-// Returns 8 points on the boundary of a rectangle
+
 void getEightBoundaryPoints(Size size, vector<Point2f>& boundaryPts)
 {
+	// Returns 8 points on the boundary of a rectangle
 	int h = size.height, w = size.width;
 	boundaryPts.push_back(Point2f(0, 0));
 	boundaryPts.push_back(Point2f(w / 2, 0));
@@ -35,10 +37,10 @@ void getEightBoundaryPoints(Size size, vector<Point2f>& boundaryPts)
 	boundaryPts.push_back(Point2f(0, h / 2));
 }
 
-// Converts Dlib landmarks into a vector for Point2f
+
 void dlibLandmarksToPoints(dlib::full_object_detection &landmarks, vector<Point2f>& points)
 {
-	// Loop over all landmark points
+	// Converts landmarks into a vector for Point2f
 	for (int i = 0; i < landmarks.num_parts(); i++)
 	{
 		Point2f pt(landmarks.part(i).x(), landmarks.part(i).y());
@@ -46,38 +48,26 @@ void dlibLandmarksToPoints(dlib::full_object_detection &landmarks, vector<Point2
 	}
 }
 
-// Compute similarity transform given two pairs of corresponding points.
-// OpenCV requires 3 points for calculating similarity matrix.
-// We are hallucinating the third point.
 void similarityTransform(std::vector<cv::Point2f>& inPoints, std::vector<cv::Point2f>& outPoints, cv::Mat &tform)
 {
-
 	double s60 = sin(60 * M_PI / 180.0);
 	double c60 = cos(60 * M_PI / 180.0);
 
 	vector <Point2f> inPts = inPoints;
 	vector <Point2f> outPts = outPoints;
 
-	// Placeholder for the third point.
 	inPts.push_back(cv::Point2f(0, 0));
 	outPts.push_back(cv::Point2f(0, 0));
 
-	// The third point is calculated so that the three points make an equilateral triangle
 	inPts[2].x = c60 * (inPts[0].x - inPts[1].x) - s60 * (inPts[0].y - inPts[1].y) + inPts[1].x;
 	inPts[2].y = s60 * (inPts[0].x - inPts[1].x) + c60 * (inPts[0].y - inPts[1].y) + inPts[1].y;
 
 	outPts[2].x = c60 * (outPts[0].x - outPts[1].x) - s60 * (outPts[0].y - outPts[1].y) + outPts[1].x;
 	outPts[2].y = s60 * (outPts[0].x - outPts[1].x) + c60 * (outPts[0].y - outPts[1].y) + outPts[1].y;
 
-	// Now we can use estimateRigidTransform for calculating the similarity transform.
 	tform = cv::estimateAffinePartial2D(inPts, outPts);
 }
 
-// Normalizes a facial image to a standard size given by outSize.
-// The normalization is done based on Dlib's landmark points passed as pointsIn
-// After the normalization the left corner of the left eye is at (0.3 * w, h/3 )
-// and the right corner of the right eye is at ( 0.7 * w, h / 3) where w and h
-// are the width and height of outSize.
 void normalizeImagesAndLandmarks(Size outSize, Mat &imgIn, Mat &imgOut, vector<Point2f>& pointsIn, vector<Point2f>& pointsOut)
 {
 	int h = outSize.height;
@@ -87,34 +77,25 @@ void normalizeImagesAndLandmarks(Size outSize, Mat &imgIn, Mat &imgOut, vector<P
 	vector<Point2f> eyecornerSrc;
 	if (pointsIn.size() == 68)
 	{
-		// Get the locations of the left corner of left eye
 		eyecornerSrc.push_back(pointsIn[36]);
-		// Get the locations of the right corner of right eye
 		eyecornerSrc.push_back(pointsIn[45]);
 	}
 	else if (pointsIn.size() == 5)
 	{
-		// Get the locations of the left corner of left eye
 		eyecornerSrc.push_back(pointsIn[2]);
-		// Get the locations of the right corner of right eye
 		eyecornerSrc.push_back(pointsIn[0]);
 	}
 
 	vector<Point2f> eyecornerDst;
-	// Location of the left corner of left eye in normalized image.
 	eyecornerDst.push_back(Point2f(0.3*w, h / 3));
-	// Location of the right corner of right eye in normalized image.
 	eyecornerDst.push_back(Point2f(0.7*w, h / 3));
 
-	// Calculate similarity transform
 	Mat tform;
 	similarityTransform(eyecornerSrc, eyecornerDst, tform);
 
-	// Apply similarity transform to input image
 	imgOut = Mat::zeros(h, w, CV_32FC3);
 	warpAffine(imgIn, imgOut, tform, imgOut.size());
 
-	// Apply similarity transform to landmarks
 	transform(pointsIn, pointsOut, tform);
 
 }
@@ -138,32 +119,23 @@ static int findIndex(vector<Point2f>& points, Point2f &point)
 }
 
 
-// Calculate Delaunay triangles for set of points
-// Returns the vector of indices of 3 points for each triangle
+
 static void calculateDelaunayTriangles(Rect rect, vector<Point2f> &points, vector< vector<int> > &delaunayTri) {
 
-	// Create an instance of Subdiv2D
 	Subdiv2D subdiv(rect);
 
-	// Insert points into subdiv
 	for (vector<Point2f>::iterator it = points.begin(); it != points.end(); it++)
 		subdiv.insert(*it);
 
-	// Get Delaunay triangulation
 	vector<Vec6f> triangleList;
 	subdiv.getTriangleList(triangleList);
 
-	// Variable to store a triangle ( 3 points )
 	vector<Point2f> pt(3);
-
-	// Variable to store a triangle as indices from list of points
 	vector<int> ind(3);
 
 	for (size_t i = 0; i < triangleList.size(); i++)
 	{
-		// The triangle returned by getTriangleList is
-		// a list of 6 coordinates of the 3 points in
-		// x1, y1, x2, y2, x3, y3 format.
+
 		Vec6f t = triangleList[i];
 
 		// Store triangle as a vector of three points
@@ -196,13 +168,13 @@ void applyAffineTransform(Mat &warpImage, Mat &src, vector<Point2f> &srcTri, vec
 	warpAffine(src, warpImage, warpMat, warpImage.size(), INTER_LINEAR, BORDER_REFLECT_101);
 }
 
-// Warps and alpha blends triangular regions from img1 and img2 to img
+
 void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2f> t2)
 {
-	// Find bounding rectangle for each triangle
+
 	Rect r1 = boundingRect(t1);
 	Rect r2 = boundingRect(t2);
-	// Offset points by left top corner of the respective rectangles
+
 	vector<Point2f> t1Rect, t2Rect;
 	vector<Point> t2RectInt;
 	for (int i = 0; i < 3; i++)
@@ -214,7 +186,7 @@ void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2f> t2)
 		t2Rect.push_back(Point2f(t2[i].x - r2.x, t2[i].y - r2.y));
 	}
 
-	// Get mask by filling triangle
+
 	Mat mask = Mat::zeros(r2.height, r2.width, CV_32FC3);
 	fillConvexPoly(mask, t2RectInt, Scalar(1.0, 1.0, 1.0), 16, 0);
 
@@ -278,41 +250,32 @@ vector<Point2f> getLandmarks(dlib::frontal_face_detector &faceDetector, dlib::sh
 }
 
 
-// Warps an image in a piecewise affine manner.
-// The warp is defined by the movement of landmark points specified by pointsIn
-// to a new location specified by pointsOut. The triangulation beween points is specified
-// by their indices in delaunayTri.
+
 void warpImage(Mat &imgIn, Mat &imgOut, vector<Point2f> &pointsIn, vector<Point2f> &pointsOut, vector< vector<int> > &delaunayTri)
 {
-	// Specify the output image the same size and type as the input image.
+
 	Size size = imgIn.size();
 	imgOut = Mat::zeros(size, imgIn.type());
 
-	// Warp each input triangle to output triangle.
-	// The triangulation is specified by delaunayTri
 	for (size_t j = 0; j < delaunayTri.size(); j++)
 	{
-		// Input and output points corresponding to jth triangle
+
 		vector<Point2f> tin, tout;
 
 		for (int k = 0; k < 3; k++)
 		{
-			// Extract a vertex of input triangle
 			Point2f pIn = pointsIn[delaunayTri[j][k]];
-			// Make sure the vertex is inside the image.
 			constrainPoint(pIn, size);
 
-			// Extract a vertex of the output triangle
+
 			Point2f pOut = pointsOut[delaunayTri[j][k]];
-			// Make sure the vertex is inside the image.
 			constrainPoint(pOut, size);
 
-			// Push the input vertex into input triangle
 			tin.push_back(pIn);
-			// Push the output vertex into output triangle
+
 			tout.push_back(pOut);
 		}
-		// Warp pixels inside input triangle to output triangle.
+
 		warpTriangle(imgIn, imgOut, tin, tout);
 	}
 }
