@@ -1,1 +1,13 @@
-
+.git
+dlib/
+data/images/
+data/models/
+data/.gitkeep
+cpp/codes/
+cpp/Facial_Landmarks/.vs
+cpp/Facial_Landmarks/x64
+cpp/Facial_Landmarks/Facial_Landmarks.sln
+cpp/Facial_Landmarks/Facial_Landmarks/x64
+cpp/Facial_Landmarks/Facial_Landmarks/Facial_Landmarks.vcxproj
+cpp/Facial_Landmarks/Facial_Landmarks/Facial_Landmarks.vcxproj.filters
+cpp/Facial_Landmarks/Facial_Landmarks/Facial_Landmarks.vcxproj.user
