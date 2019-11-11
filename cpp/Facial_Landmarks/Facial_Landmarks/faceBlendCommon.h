@@ -14,7 +14,7 @@ using namespace std;
 
 
 
-void constrainPoint(Point2f &p, Size sz)
+static void constrainPoint(Point2f &p, Size sz)
 {
 	p.x = min(max((double)p.x, 0.0), (double)(sz.width - 1)); 
 	p.y = min(max((double)p.y, 0.0), (double)(sz.height - 1));
@@ -22,7 +22,7 @@ void constrainPoint(Point2f &p, Size sz)
 }
 
 
-void getEightBoundaryPoints(Size size, vector<Point2f>& boundaryPts)
+static void getEightBoundaryPoints(Size size, vector<Point2f>& boundaryPts)
 {
 	int h = size.height, w = size.width;
 	boundaryPts.push_back(Point2f(0, 0));
@@ -36,7 +36,7 @@ void getEightBoundaryPoints(Size size, vector<Point2f>& boundaryPts)
 }
 
 
-void dlibLandmarksToPoints(dlib::full_object_detection &landmarks, vector<Point2f>& points)
+static void dlibLandmarksToPoints(dlib::full_object_detection &landmarks, vector<Point2f>& points)
 {
 	for (int i = 0; i < landmarks.num_parts(); i++)
 	{
@@ -45,7 +45,7 @@ void dlibLandmarksToPoints(dlib::full_object_detection &landmarks, vector<Point2
 	}
 }
 
-void similarityTransform(std::vector<cv::Point2f>& inPoints, std::vector<cv::Point2f>& outPoints, cv::Mat &tform)
+static void similarityTransform(std::vector<cv::Point2f>& inPoints, std::vector<cv::Point2f>& outPoints, cv::Mat &tform)
 {
 	double s60 = sin(60 * M_PI / 180.0);
 	double c60 = cos(60 * M_PI / 180.0);
@@ -65,7 +65,7 @@ void similarityTransform(std::vector<cv::Point2f>& inPoints, std::vector<cv::Poi
 	tform = cv::estimateAffinePartial2D(inPts, outPts);
 }
 
-void normalizeImagesAndLandmarks(Size outSize, Mat &imgIn, Mat &imgOut, vector<Point2f>& pointsIn, vector<Point2f>& pointsOut)
+static void normalizeImagesAndLandmarks(Size outSize, Mat &imgIn, Mat &imgOut, vector<Point2f>& pointsIn, vector<Point2f>& pointsOut)
 {
 	int h = outSize.height;
 	int w = outSize.width;
@@ -150,13 +150,13 @@ static void calculateDelaunayTriangles(Rect rect, vector<Point2f> &points, vecto
 
 }
 
-void applyAffineTransform(Mat &warpImage, Mat &src, vector<Point2f> &srcTri, vector<Point2f> &dstTri)
+static void applyAffineTransform(Mat &warpImage, Mat &src, vector<Point2f> &srcTri, vector<Point2f> &dstTri)
 {
 	Mat warpMat = getAffineTransform(srcTri, dstTri);
 	warpAffine(src, warpImage, warpMat, warpImage.size(), INTER_LINEAR, BORDER_REFLECT_101);
 }
 
-void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2f> t2)
+static void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2f> t2)
 {
 
 	Rect r1 = boundingRect(t1);
@@ -190,13 +190,13 @@ void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2f> t2)
 
 }
 
-bool rectAreaComparator(dlib::rectangle &r1, dlib::rectangle &r2)
+static bool rectAreaComparator(dlib::rectangle &r1, dlib::rectangle &r2)
 {
 	return r1.area() < r2.area();
 }
 
 
-vector<Point2f> getLandmarks(dlib::frontal_face_detector &faceDetector, dlib::shape_predictor &landmarkDetector, Mat &img, float FACE_DOWNSAMPLE_RATIO = 1)
+static vector<Point2f> getLandmarks(dlib::frontal_face_detector &faceDetector, dlib::shape_predictor &landmarkDetector, Mat &img, float FACE_DOWNSAMPLE_RATIO = 1)
 {
 
 	vector<Point2f> points;
@@ -234,7 +234,7 @@ vector<Point2f> getLandmarks(dlib::frontal_face_detector &faceDetector, dlib::sh
 
 
 
-void warpImage(Mat &imgIn, Mat &imgOut, vector<Point2f> &pointsIn, vector<Point2f> &pointsOut, vector< vector<int> > &delaunayTri)
+static void warpImage(Mat &imgIn, Mat &imgOut, vector<Point2f> &pointsIn, vector<Point2f> &pointsOut, vector< vector<int> > &delaunayTri)
 {
 
 	Size size = imgIn.size();
