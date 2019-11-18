@@ -10,13 +10,13 @@
 using namespace dlib;
 using namespace std;
 
-#define RESIZE_HEIGHT 480
-#define SKIP_FRAMES 2
 #define OPENCV_FACE_RENDER
 
-
-int main()
+int fastWebFLD()
 {
+	int RESIZE_HEIGHT = 480;
+	int SKIP_FRAMES  = 2;
+
 	try
 	{
 		string winName("Fast Facial Landmark Detector");
