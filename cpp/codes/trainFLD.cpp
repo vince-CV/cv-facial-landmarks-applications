@@ -32,15 +32,11 @@ using namespace dlib;
 using namespace std;
 
 
-double interocular_distance (
-  const full_object_detection& det,
-  int numPoints
-)
+double interocular_distance (const full_object_detection& det, int numPoints)
 {
   dlib::vector<double,2> l, r;
   double cnt = 0;
-  // Find the center of the left eye by averaging the points around
-  // the eye.
+  // Find the center of the left eye by averaging the points around the eye.
   if (numPoints == 70)
   {
     for (unsigned long i = 36; i <= 41; ++i)
@@ -59,8 +55,7 @@ double interocular_distance (
   }
   l /= cnt;
 
-  // Find the center of the right eye by averaging the points around
-  // the eye.
+  // Find the center of the right eye by averaging the points around the eye.
   cnt = 0;
   if (numPoints==70)
   {
