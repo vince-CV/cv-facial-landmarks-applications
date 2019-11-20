@@ -27,7 +27,7 @@ double interEyeDistance(full_object_detection &shape)
 	return distance;
 }
 
-int main()
+int stableFLD()
 {
 	int RESIZE_HEIGHT = 360;
 	int NUM_FRAMES_FOR_FPS = 100;
