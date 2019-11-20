@@ -30,7 +30,7 @@ def createXml(imageNames, xmlName, numPoints):
 
     box = ET.SubElement(image, 'box', top=top, left=left, width=width, height=height)
 
-    points_name = os.path.splitext(imageName)[0] + '_bv' + numPoints + '.txt'
+    points_name = os.path.splitext(imageName)[0] + '_bv' + str(numPoints) + '.txt'
     with open(os.path.join(fldDatadir, points_name), 'r') as file:
       for i, point in enumerate(file):
         x, y = point.split()
@@ -49,7 +49,7 @@ def createXml(imageNames, xmlName, numPoints):
 
 if __name__ == '__main__':
 
-  fldDatadir = "../data/facial_landmark_data"
+  fldDatadir = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/facial_landmark_data"
   numPoints = 70
 
   if len(sys.argv) == 2:
@@ -62,11 +62,10 @@ if __name__ == '__main__':
   with open(os.path.join(fldDatadir, 'image_names.txt')) as d:
     imageNames = [x.strip() for x in d.readlines()]
 
-  # If are unable to train all images on your machine, we can reduce training data by randomly sampling n images from the total list.
 
-  # decrease training data
-  # n = 1000
-  # imageNames = random.sample(imageNames, n)
+  # decrease training data if enough RAM
+  n = 1000
+  imageNames = random.sample(imageNames, n)
 
   totalNumFiles = len(imageNames)
   numTestFiles = int(0.05 * totalNumFiles)

@@ -25,8 +25,8 @@ def drawLandmarks(im, parts):
 scale = 4
 numSamples = 50
 
-fldDir = "../data/facial_landmark_data"
-numPoints = 70
+fldDir = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/facial_landmark_data"
+numPoints = 33
 
 if len(sys.argv) == 2:
   fldDir = sys.argv[1]
@@ -47,7 +47,7 @@ if os.path.exists(imageNamesFilepath):
   with open(imageNamesFilepath) as d:
     imageNames = [x.strip() for x in d.readlines()]
 else:
-  print('Pass path to facial_landmark_data as argument to this script')
+  print('Need path to facial_landmark_data')
 
 
 random.shuffle(imageNames)
