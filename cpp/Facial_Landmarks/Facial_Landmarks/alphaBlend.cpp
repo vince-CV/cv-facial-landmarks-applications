@@ -35,13 +35,12 @@ Mat& alphaBlendDirectAccess(Mat& alpha, Mat& foreground, Mat& background, Mat& o
 }
 
 
-int main(int argc, char** argv)
+int alphaBlend(int argc, char** argv)
 {
 
 	Mat foreGroundImage = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/foreGroundAssetLarge.png", -1);
 	Mat background = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/backGroundLarge.jpg");
 
-	//Mat foreGroundImage = imread("C:/Users/xwen2/Desktop/Arylla_Tag_1.png", -1);
 	Mat bgra[4];
     split(foreGroundImage, bgra); // BGR + alpha mask
 
@@ -69,25 +68,25 @@ int main(int argc, char** argv)
 
     int numOfIterations = 1; 
 
-    // Alpha blending using functions multiply and add
+
     Mat outImage= Mat::zeros(foreground.size(), foreground.type());
     double t = (double)getTickCount();
     for (int i=0; i<numOfIterations; i++) {
         outImage = blend(alpha, foreground, background, outImage);
     }
     t = ((double)getTickCount() - t)/getTickFrequency();
-    cout << "Time for alpha blending using multiply & add function : " << t*1000/numOfIterations << " milliseconds" << endl;
+    cout << "Time using multiply & add function : " << t*1000/numOfIterations << " milliseconds" << endl;
 
-    // Alpha blending using direct Mat access with for loop
+    // direct Mat access / pixel-wise 
     outImage = Mat::zeros(foreground.size(), foreground.type());
     t = (double)getTickCount();
     for (int i=0; i<numOfIterations; i++) {
         outImage = alphaBlendDirectAccess(alpha, foreground, background, outImage);
     }
     t = ((double)getTickCount() - t)/getTickFrequency();
-    cout << "Time for alpha blending using alphaBlendDirectAccess : " << t*1000/numOfIterations << " milliseconds" << endl;
+    cout << "Time using alphaBlendDirectAccess : " << t*1000/numOfIterations << " milliseconds" << endl;
 
-    imshow("alpha blended image", outImage/255);
+    imshow("Alpha blended image", outImage/255);
     waitKey(0);
 
     return 0;
