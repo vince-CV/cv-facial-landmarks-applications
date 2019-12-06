@@ -43,7 +43,7 @@ void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> tri1, vector<Point2f> tr
 
 }
 
-int main( int argc, char** argv)
+int triangle_warping( int argc, char** argv)
 {
 
   Mat imgIn = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/kingfisher.jpg");
