@@ -65,7 +65,7 @@ std::vector<std::vector<double> > get_interocular_distances (const std::vector<s
   return temp;
 }
 
-int main()
+int trainFLD()
 {
   try
   {
