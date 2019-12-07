@@ -133,7 +133,7 @@ static void writeDelaunay(Subdiv2D& subdiv, vector<Point2f>& points, const strin
 }
 
 
-int main( int argc, char** argv)
+int delauary_display( int argc, char** argv)
 {
 
 
@@ -193,7 +193,7 @@ int main( int argc, char** argv)
 
     hconcat(imgDelaunay, imgVoronoi, imgDisplay);
     imshow(win, imgDisplay);
-    waitKey(100);
+    waitKey(10);
   }
 
 
