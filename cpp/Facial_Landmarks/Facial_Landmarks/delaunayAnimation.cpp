@@ -133,7 +133,7 @@ static void writeDelaunay(Subdiv2D& subdiv, vector<Point2f>& points, const strin
 }
 
 
-int delauary_display( int argc, char** argv)
+int main( int argc, char** argv)
 {
 
 
@@ -143,8 +143,8 @@ int delauary_display( int argc, char** argv)
   Scalar delaunayColor(255,255,255), pointsColor(0, 0, 255);
 
 
-  Mat img = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/smiling-man.jpg");
-
+  Mat img = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/at.jpg");
+  resize(img, img, Size(600, 600));
 
   Size size = img.size();
   Rect rect(0, 0, size.width, size.height);
@@ -193,9 +193,9 @@ int delauary_display( int argc, char** argv)
 
     hconcat(imgDelaunay, imgVoronoi, imgDisplay);
     imshow(win, imgDisplay);
-    waitKey(10);
+    waitKey(100);
   }
-
+  imwrite("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/results/imgDelaunay.jpg", imgDelaunay);
 
   writeDelaunay(subdiv, points, "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/results/smiling-man-delaunay.tri");
 

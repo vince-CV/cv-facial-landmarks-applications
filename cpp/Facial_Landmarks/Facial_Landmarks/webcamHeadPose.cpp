@@ -4,7 +4,7 @@
 #include <dlib/image_processing/render_face_detections.h>
 #include <dlib/image_processing.h>
 #include <dlib/gui_widgets.h>
-#include "renderFace.hpp"
+#include "renderFace.h"
 
 using namespace dlib;
 using namespace std;
@@ -15,7 +15,7 @@ using namespace std;
 
 
 // 3D Model Points of selected landmarks in an arbitrary frame of reference
-std::vector<cv::Point3d> get3dModelPoints()
+static std::vector<cv::Point3d> get3dModelPoints()
 {
   std::vector<cv::Point3d> modelPoints;
 
@@ -31,7 +31,7 @@ std::vector<cv::Point3d> get3dModelPoints()
 }
 
 // 2D landmark points from all landmarks
-std::vector<cv::Point2d> get2dImagePoints(full_object_detection &d)
+static std::vector<cv::Point2d> get2dImagePoints(full_object_detection &d)
 {
   std::vector<cv::Point2d> imagePoints;
   imagePoints.push_back( cv::Point2d( d.part(30).x(), d.part(30).y() ) );    // Nose tip
@@ -45,13 +45,13 @@ std::vector<cv::Point2d> get2dImagePoints(full_object_detection &d)
 }
 
 // Camera Matrix from focal length and focal center
-cv::Mat getCameraMatrix(float focal_length, cv::Point2d center)
+static cv::Mat getCameraMatrix(float focal_length, cv::Point2d center)
 {
   cv::Mat cameraMatrix = (cv::Mat_<double>(3,3) << focal_length, 0, center.x, 0 , focal_length, center.y, 0, 0, 1);
   return cameraMatrix;
 }
 
-int main()
+int webcam_head()
 {
   try
   {

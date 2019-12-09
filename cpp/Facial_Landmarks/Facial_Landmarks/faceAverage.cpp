@@ -1,4 +1,4 @@
-#include "faceBlendCommon.hpp"
+#include "faceBlendCommon.h"
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -67,7 +67,7 @@ void readFileNames(string dirName, vector<string> &imageFnames)
 
 }
 
-int main( int argc, char** argv)
+int face_ave( int argc, char** argv)
 {
   // Get the face detector
   dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
