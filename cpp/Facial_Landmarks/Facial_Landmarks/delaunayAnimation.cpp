@@ -133,7 +133,7 @@ static void writeDelaunay(Subdiv2D& subdiv, vector<Point2f>& points, const strin
 }
 
 
-int main( int argc, char** argv)
+int delaunay_animation( int argc, char** argv)
 {
 
 

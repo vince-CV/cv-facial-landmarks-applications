@@ -1,6 +1,6 @@
 #include "faceBlendCommon.h"
 
-int face_morph( int argc, char** argv)
+int main( int argc, char** argv)
 {
   // Get the face detector
   dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
@@ -9,11 +9,11 @@ int face_morph( int argc, char** argv)
   dlib::shape_predictor landmarkDetector;
 
   // Load the landmark model
-  dlib::deserialize("../data/models/shape_predictor_68_face_landmarks.dat") >> landmarkDetector;
+  dlib::deserialize("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/models/shape_predictor_68_face_landmarks.dat") >> landmarkDetector;
 
   //Read two images
-  Mat img1 = imread("../data/images/hillary-clinton.jpg");
-  Mat img2 = imread("../data/images/presidents/bill-clinton.jpg");
+  Mat img1 = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/hillary-clinton.jpg");
+  Mat img2 = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/presidents/bill-clinton.jpg");
 
   // Detect landmarks in both images.
   vector<Point2f> points1 = getLandmarks(faceDetector, landmarkDetector, img1);

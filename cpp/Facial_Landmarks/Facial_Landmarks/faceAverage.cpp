@@ -5,9 +5,7 @@
 #include <algorithm>
 #include <vector>
 
-// dirent.h is pre-included with *nix like systems
-// but not for Windows. So we are trying to include
-// this header files based on Operating System
+
 #ifdef _WIN32
   #include "dirent.h"
 #elif __APPLE__
@@ -25,7 +23,7 @@
   #error "Unknown compiler"
 #endif
 
-// Read jpg files from the directory
+
 void readFileNames(string dirName, vector<string> &imageFnames)
 {
   DIR *dir;
@@ -38,7 +36,7 @@ void readFileNames(string dirName, vector<string> &imageFnames)
 
   if ((dir = opendir (dirName.c_str())) != NULL)
   {
-    /* print all the files and directories within directory */
+
     while ((ent = readdir (dir)) != NULL)
     {
       if(strcmp(ent->d_name,".") == 0 || strcmp(ent->d_name,"..") == 0 )
@@ -69,33 +67,26 @@ void readFileNames(string dirName, vector<string> &imageFnames)
 
 int face_ave( int argc, char** argv)
 {
-  // Get the face detector
+
   dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
 
-  // The landmark detector is implemented in the shape_predictor class
   dlib::shape_predictor landmarkDetector;
 
-  // Load the landmark model
-  dlib::deserialize("../data/models/shape_predictor_68_face_landmarks.dat") >> landmarkDetector;
+  dlib::deserialize("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/models/shape_predictor_68_face_landmarks.dat") >> landmarkDetector;
 
-  // Directory containing images.
-  string dirName = "../data/images/presidents";
+  string dirName = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/presidents";
 
-  // Add slash to directory name if missing
   if (!dirName.empty() && dirName.back() != '/')
     dirName += '/';
 
-  // Read images in the directory
   vector<string> imageNames, ptsNames;
   readFileNames(dirName, imageNames);
 
-  // Exit program if no images are found or if the number of image files does not match with the number of point files
   if(imageNames.empty())exit(EXIT_FAILURE);
 
-  // Vector of vector of points for all image landmarks.
   vector<vector<Point2f> > allPoints;
 
-  // Read images and perform landmark detection.
+
   vector<Mat> images;
   for(size_t i = 0; i < imageNames.size(); i++)
   {
@@ -125,22 +116,16 @@ int face_ave( int argc, char** argv)
 
   int numImages = images.size();
 
-  // Space for normalized images and points.
   vector <Mat> imagesNorm;
   vector < vector <Point2f> > pointsNorm;
 
-  // Space for average landmark points
   vector <Point2f> pointsAvg(allPoints[0].size());
 
-  // Dimensions of output image
   Size size(600,600);
 
-  // 8 Boundary points for Delaunay Triangulation
   vector <Point2f> boundaryPts;
   getEightBoundaryPoints(size, boundaryPts);
 
-  // Warp images and transform landmarks to output coordinate system,
-  // and find average of transformed landmarks.
 
   for(size_t i = 0; i < images.size(); i++)
   {
@@ -150,13 +135,11 @@ int face_ave( int argc, char** argv)
     Mat img;
     normalizeImagesAndLandmarks(size,images[i],img, points, points);
 
-    // Calculate average landmark locations
     for ( size_t j = 0; j < points.size(); j++)
     {
       pointsAvg[j] += points[j] * ( 1.0 / numImages);
     }
 
-    // Append boundary points. Will be used in Delaunay Triangulation
     for ( size_t j = 0; j < boundaryPts.size(); j++)
     {
       points.push_back(boundaryPts[j]);
@@ -167,36 +150,34 @@ int face_ave( int argc, char** argv)
 
   }
 
-  // Append boundary points to average points.
   for ( size_t j = 0; j < boundaryPts.size(); j++)
   {
     pointsAvg.push_back(boundaryPts[j]);
   }
 
-  // Calculate Delaunay triangles
+
   Rect rect(0, 0, size.width, size.height);
   vector< vector<int> > dt;
   calculateDelaunayTriangles(rect, pointsAvg, dt);
 
-  // Space for output image
+
   Mat output = Mat::zeros(size, CV_32FC3);
 
-  // Warp input images to average image landmarks
+
   for(size_t i = 0; i < numImages; i++)
   {
     Mat img;
     warpImage(imagesNorm[i],img, pointsNorm[i], pointsAvg, dt);
-    // Add image intensities for averaging
     output = output + img;
 
   }
 
-  // Divide by numImages to get average
+
   output = output / (double)numImages;
 
-  // Display result
-  imshow("image", output);
-  waitKey(0);
+
+  cv::imshow("image", output);
+  cv::waitKey(0);
 
   return EXIT_SUCCESS;
 }
