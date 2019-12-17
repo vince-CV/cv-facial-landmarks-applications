@@ -65,7 +65,7 @@ void readFileNames(string dirName, vector<string> &imageFnames)
 
 }
 
-int face_ave( int argc, char** argv)
+int face_average( int argc, char** argv)
 {
 
   dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
@@ -74,7 +74,7 @@ int face_ave( int argc, char** argv)
 
   dlib::deserialize("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/models/shape_predictor_68_face_landmarks.dat") >> landmarkDetector;
 
-  string dirName = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/presidents";
+  string dirName = "C:/Users/xwen2/Desktop/Arylla Faces/";
 
   if (!dirName.empty() && dirName.back() != '/')
     dirName += '/';
@@ -167,6 +167,7 @@ int face_ave( int argc, char** argv)
   for(size_t i = 0; i < numImages; i++)
   {
     Mat img;
+
     warpImage(imagesNorm[i],img, pointsNorm[i], pointsAvg, dt);
     output = output + img;
 
