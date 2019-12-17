@@ -179,6 +179,7 @@ static void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2
 	Mat img1Rect, img2Rect;
 	img1(r1).copyTo(img1Rect);
 
+
 	Mat warpImage = Mat::zeros(r2.height, r2.width, img1Rect.type());
 
 	applyAffineTransform(warpImage, img1Rect, t1Rect, t2Rect);
@@ -258,6 +259,7 @@ static void warpImage(Mat &imgIn, Mat &imgOut, vector<Point2f> &pointsIn, vector
 
 			tout.push_back(pOut);
 		}
+
 
 		warpTriangle(imgIn, imgOut, tin, tout);
 	}
