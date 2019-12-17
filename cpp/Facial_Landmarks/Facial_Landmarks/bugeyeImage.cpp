@@ -10,18 +10,18 @@ using namespace cv;
 using namespace std;
 using namespace dlib;
 
-#define FACE_DOWNSAMPLE_RATIO_DLIB 1    //affects dlib's face detector
+#define FACE_DOWNSAMPLE_RATIO_DLIB 1   
 
 #ifndef M_PI
   #define M_PI 3.14159
 #endif
 
-Mat barrel(Mat &src, float k)
+static Mat barrel(Mat &src, float k)
 {
   int w = src.cols;
   int h = src.rows;
 
-  // Meshgrid of destiation image
+
   Mat Xd = cv::Mat::zeros(src.size(), CV_32F);
   Mat Yd = cv::Mat::zeros(src.size(), CV_32F);
 
@@ -30,33 +30,29 @@ Mat barrel(Mat &src, float k)
   {
     for (int x = 0; x < w; x++)
     {
-      // Normalize x and y
+
       Xu = ( (float) x / w )- 0.5;
       Yu = ( (float) y / h )- 0.5;
 
-      // Radial distance from center
+
       float r = sqrt(Xu * Xu + Yu * Yu);
 
-      // Implementing the following equation
-      // dr = k * r * cos(pi*r)
+
       float dr = k * r * cos(M_PI * r);
 
-      // Outside the maximum radius dr is set to 0
       if (r > 0.5) dr = 0;
 
-      // Remember we need to provide inverse mapping to remap
-      // Hence the negative sign before dr
+
       float rn = r - dr;
 
-      // Applying the distortion on the grid
-      // Back to un-normalized coordinates
+
       Xd.at<float>(y,x) =  w * (rn * Xu / r + 0.5);
       Yd.at<float>(y,x) = h * (rn * Yu / r + 0.5);
 
     }
   }
 
-  // Interpolation of points
+
   Mat dst;
   cv::remap( src, dst, Xd, Yd, INTER_CUBIC, BORDER_CONSTANT, Scalar(0,0, 0) );
   return dst;
@@ -67,15 +63,15 @@ int main(int argc, char** argv)
   frontal_face_detector detector = get_frontal_face_detector();
   shape_predictor pose_model;
 
-  string modelPath = "../data/models/shape_predictor_68_face_landmarks.dat";
+  string modelPath = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/models/shape_predictor_68_face_landmarks.dat";
 
-  string filename = "../data/images/sample.jpg";
+  string filename = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/1.jpg";
 
   float bulge_amount = .5;
 
   int radius = 30;
 
-  // accept command line arguments for model path for landmark detector and image file
+
   cout << "USAGE" << endl << "./bugeyeImage <bulge_amount default : .5 > < radius around eye default : 30 > <filename> " << endl;
 
   if (argc == 2)
@@ -136,7 +132,7 @@ int main(int argc, char** argv)
   // imshow("distorted",dst);
   imshow("final",output);
 
-  imwrite("results/bugeye.jpg",output);
+  imwrite("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/results/fayer.jpg",output);
   waitKey(0);
 
   return 0;

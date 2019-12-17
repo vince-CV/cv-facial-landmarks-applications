@@ -17,12 +17,11 @@ using namespace dlib;
   #define M_PI 3.14159
 #endif
 
-Mat barrel(Mat &src, float k)
+static Mat barrel(Mat &src, float k)
 {
   int w = src.cols;
   int h = src.rows;
 
-  // Meshgrid of destiation image
   Mat Xd = cv::Mat::zeros(src.size(), CV_32F);
   Mat Yd = cv::Mat::zeros(src.size(), CV_32F);
 
@@ -31,33 +30,30 @@ Mat barrel(Mat &src, float k)
   {
     for (int x = 0; x < w; x++)
     {
-      // Normalize x and y
+
       Xu = ( (float) x / w )- 0.5;
       Yu = ( (float) y / h )- 0.5;
 
-      // Radial distance from center
+ 
       float r = sqrt(Xu * Xu + Yu * Yu);
 
-      // Implementing the following equation
-      // dr = k * r * cos(pi*r)
+
       float dr = k * r * cos(M_PI * r);
 
-      // Outside the maximum radius dr is set to 0
+
       if (r > 0.5) dr = 0;
 
-      // Remember we need to provide inverse mapping to remap
-      // Hence the negative sign before dr
+
       float rn = r - dr;
 
-      // Applying the distortion on the grid
-      // Back to un-normalized coordinates
+   
       Xd.at<float>(y,x) =  w * (rn * Xu / r + 0.5);
       Yd.at<float>(y,x) = h * (rn * Yu / r + 0.5);
 
     }
   }
 
-  // Interpolation of points
+
   Mat dst;
   cv::remap( src, dst, Xd, Yd, INTER_CUBIC, BORDER_CONSTANT, Scalar(0,0, 0) );
   return dst;
@@ -78,18 +74,17 @@ void constrainRect(Rect &r, Size sz)
     r.height = sz.height - r.y;
 
 }
-int main(int argc, char** argv)
+int bug_eyes(int argc, char** argv)
 {
   frontal_face_detector detector = get_frontal_face_detector();
   shape_predictor pose_model;
 
-  string modelPath = "../data/models/shape_predictor_68_face_landmarks.dat";
+  string modelPath = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/models/shape_predictor_68_face_landmarks.dat";
 
   float bulgeAmount = .5;
 
   int radius = 30;
 
-  // accept command line arguments for model path for shape detector and image file
   cout << "USAGE" << endl << "./bugeyeVideo <bulge_amount default : .5 > < radius around eye default : 30 > " << endl;
 
   if (argc == 2)
@@ -115,7 +110,7 @@ int main(int argc, char** argv)
   std::vector<dlib::rectangle> faces ;
   while(1)
   {
-    // Grab a frame
+
     double time_total = (double)cv::getTickCount();
     cap >> src;
     int height = src.rows;
@@ -150,14 +145,12 @@ int main(int argc, char** argv)
                 (long)(faces[0].bottom() * FACE_DOWNSAMPLE_RATIO_DLIB)
                 );
 
-    // Find the pose of each face.
+
     full_object_detection landmarks;
 
-    // Find the landmark points using DLIB Facial landmarks detector
     landmarks = pose_model(cimg, r);
 
 
-    // Find the roi for left and right Eye
     Rect roiEyeRight ( (landmarks.part(43).x()-radius)
                       , (landmarks.part(43).y()-radius)
                       , ( landmarks.part(46).x() - landmarks.part(43).x() + 2*radius )
@@ -170,7 +163,6 @@ int main(int argc, char** argv)
     constrainRect(roiEyeRight, src.size());
     constrainRect(roiEyeLeft, src.size());
 
-    // Find the atch and apply the transform
     output = src.clone();
     src(roiEyeRight).copyTo(eyeRegion);
     eyeRegion = barrel(eyeRegion, bulgeAmount);
@@ -184,7 +176,7 @@ int main(int argc, char** argv)
     imshow("Bug Eye Demo",output);
 
     int k = cv::waitKey(1);
-    // Quit if 'q' or ESC is pressed
+
     if ( k == 'q' || k == 27)
     {
       break;
