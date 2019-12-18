@@ -13,7 +13,7 @@ static dlib::rectangle openCVRectToDlib(cv::Rect r)
 	return dlib::rectangle((long)r.tl().x, (long)r.tl().y, (long)r.br().x - 1, (long)r.br().y - 1);
 }
 
-int main() 
+int arylla_landmark() 
 {
 	
 

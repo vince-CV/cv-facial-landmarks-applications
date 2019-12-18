@@ -3,7 +3,7 @@
 using namespace cv;
 using namespace std;
 
-// using multiply and add functions
+
 Mat& blend(Mat& alpha, Mat& foreground, Mat& background, Mat& outImage)
 {
     Mat fore, back;
@@ -14,7 +14,7 @@ Mat& blend(Mat& alpha, Mat& foreground, Mat& background, Mat& outImage)
     return outImage;
 }
 
-// using direct pointer access (pixel-wise)
+
 Mat& alphaBlendDirectAccess(Mat& alpha, Mat& foreground, Mat& background, Mat& outImage)
 {
 

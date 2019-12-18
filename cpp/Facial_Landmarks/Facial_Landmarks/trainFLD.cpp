@@ -69,17 +69,16 @@ int trainFLD()
 {
   try
   {
-    // train a shape_predictor using facial_landmark_data. 
+
 
 	const std::string fldDatadir = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/facial_landmark_data"; //argv[1];
 	int numPoints = 70; //atoi(argv[2]);
     const std::string modelName = "shape_predictor_" + to_string(numPoints) + "_face_landmarks.dat";
     const std::string modelPath = fldDatadir + "/" + modelName;
 
-    // Create shape_predictor_trainer object
     shape_predictor_trainer trainer;
 
-    trainer.set_num_threads(1); // Parallelize training process
+    trainer.set_num_threads(1);
 
     trainer.set_cascade_depth(10);
     trainer.set_num_trees_per_cascade_level(500);
@@ -94,8 +93,7 @@ int trainFLD()
     trainer.be_verbose();
 
 
-    // images_train: training images
-	// faces_train: the locations and poses of each face in the training images.
+
     dlib::array<array2d<unsigned char> > images_train, images_test;
     std::vector<std::vector<full_object_detection> > faces_train, faces_test;
 

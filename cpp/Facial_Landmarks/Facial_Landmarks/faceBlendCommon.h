@@ -166,7 +166,7 @@ static void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2
 	vector<Point> t2RectInt;
 	for (int i = 0; i < 3; i++)
 	{
-		t2RectInt.push_back(Point((int)(t2[i].x - r2.x), (int)(t2[i].y - r2.y))); // for fillConvexPoly
+		t2RectInt.push_back(Point((int)(t2[i].x - r2.x), (int)(t2[i].y - r2.y))); 
 
 		t1Rect.push_back(Point2f(t1[i].x - r1.x, t1[i].y - r1.y));
 		t2Rect.push_back(Point2f(t2[i].x - r2.x, t2[i].y - r2.y));
@@ -184,7 +184,7 @@ static void warpTriangle(Mat &img1, Mat &img2, vector<Point2f> t1, vector<Point2
 
 	applyAffineTransform(warpImage, img1Rect, t1Rect, t2Rect);
 
-	// Copy triangular region of the rectangular patch to the output image
+
 	multiply(warpImage, mask, warpImage);
 	multiply(img2(r2), Scalar(1.0, 1.0, 1.0) - mask, img2(r2));
 	img2(r2) = img2(r2) + warpImage;
@@ -205,17 +205,16 @@ static vector<Point2f> getLandmarks(dlib::frontal_face_detector &faceDetector, d
 	Mat imgSmall;
 	cv::resize(img, imgSmall, cv::Size(), 1.0 / FACE_DOWNSAMPLE_RATIO, 1.0 / FACE_DOWNSAMPLE_RATIO);
 
-	// Convert OpenCV image format to Dlib's image format
 	dlib::cv_image<dlib::bgr_pixel> dlibIm(img);
 	dlib::cv_image<dlib::bgr_pixel> dlibImSmall(imgSmall);
 
 
-	// Detect faces in the image
+
 	std::vector<dlib::rectangle> faceRects = faceDetector(dlibImSmall);
 
 	if (faceRects.size() > 0)
 	{
-		// Pick the biggest face
+
 		dlib::rectangle rect = *std::max_element(faceRects.begin(), faceRects.end(), rectAreaComparator);
 
 		dlib::rectangle scaledRect(

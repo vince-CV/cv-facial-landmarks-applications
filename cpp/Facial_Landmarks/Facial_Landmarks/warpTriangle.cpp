@@ -72,7 +72,7 @@ int triangle_warping( int argc, char** argv)
 
 
 
-  // Convert back to uint because OpenCV antialiasing does not work on image of type CV_32FC3
+
 
   imgIn.convertTo(imgIn, CV_8UC3, 255.0);
   imgOut.convertTo(imgOut, CV_8UC3, 255.0);
