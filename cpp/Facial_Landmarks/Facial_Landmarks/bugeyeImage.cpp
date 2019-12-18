@@ -58,16 +58,16 @@ static Mat barrel(Mat &src, float k)
   return dst;
 }
 
-int main(int argc, char** argv)
+int bug_eyes_image(int argc, char** argv)
 {
   frontal_face_detector detector = get_frontal_face_detector();
   shape_predictor pose_model;
 
   string modelPath = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/models/shape_predictor_68_face_landmarks.dat";
 
-  string filename = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/1.jpg";
+  string filename = "C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/2.jpg";
 
-  float bulge_amount = .5;
+  float bulge_amount = .85;
 
   int radius = 30;
 
