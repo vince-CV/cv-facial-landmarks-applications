@@ -12,8 +12,8 @@ int main( int argc, char** argv)
   dlib::deserialize("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/models/shape_predictor_68_face_landmarks.dat") >> landmarkDetector;
 
 
-  Mat img1 = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/feier.jpg");
-  Mat img2 = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/xunzhe.jpg");
+  Mat img1 = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/y.jpg");
+  Mat img2 = imread("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/images/f.jpg");
 
 
   vector<Point2f> points1 = getLandmarks(faceDetector, landmarkDetector, img1);
