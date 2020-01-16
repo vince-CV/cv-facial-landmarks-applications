@@ -1,6 +1,6 @@
 #include "faceBlendCommon.h"
 
-int main( int argc, char** argv)
+int facemorph( int argc, char** argv)
 {
 
   dlib::frontal_face_detector faceDetector = dlib::get_frontal_face_detector();

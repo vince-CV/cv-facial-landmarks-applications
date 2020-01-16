@@ -71,9 +71,6 @@ int triangle_warping( int argc, char** argv)
   warpTriangle(imgIn, imgOut, triIn, triOut);
 
 
-
-
-
   imgIn.convertTo(imgIn, CV_8UC3, 255.0);
   imgOut.convertTo(imgOut, CV_8UC3, 255.0);
 
