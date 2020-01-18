@@ -22,7 +22,7 @@ using namespace dlib;
 #define FACE_DOWNSAMPLE_RATIO 1.5
 #define SKIP_FRAMES 2
 
-int main()
+int swap_video()
 {
 
   frontal_face_detector detector = get_frontal_face_detector();
