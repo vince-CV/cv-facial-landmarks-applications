@@ -1,51 +1,38 @@
-#include "faceBlendCommon.hpp"
-#include "mls30.hpp"
+#include "faceBlendCommon.h"
+#include "mls30.h"
 
 using namespace dlib;
 
-// Variables for resizing to a standard height
 #define RESIZE_HEIGHT 360
 #define FACE_DOWNSAMPLE_RATIO 1.5
 #define SKIP_FRAMES 1
 
-int main(int argc, char** argv)
+int happ_video(int argc, char** argv)
 {
-  // Get the face detector
   frontal_face_detector faceDetector = dlib::get_frontal_face_detector();
-
-  // The landmark detector is implemented in the shape_predictor class
   shape_predictor landmarkDetector;
 
-  // Load the landmark model
-  deserialize("../../common/shape_predictor_68_face_landmarks.dat") >> landmarkDetector;
+  deserialize("C:/Users/xwen2/Desktop/Computer Vision Projects/Face Landmarks/data/models/shape_predictor_68_face_landmarks.dat") >> landmarkDetector;
 
-  // Amount of bulge to be given for fatify
   float offset1 = 1.5;
   float offset2 = 1.5;
 
-  // Points that should not move
   int anchorPoints[] = {8, 30};
   std::vector<int> anchorPointsArray (anchorPoints, anchorPoints + sizeof(anchorPoints) / sizeof(int) );
 
-  // Points that will be deformed
-  // for lips
   int deformedPoints1[] = {48, 57, 54};
   std::vector<int> deformedPoints1Array (deformedPoints1, deformedPoints1 + sizeof(deformedPoints1) / sizeof(int) );
-  // for eyes
+
   int deformedPoints2[] = {21, 22, 36, 45};
   std::vector<int> deformedPoints2Array (deformedPoints2, deformedPoints2 + sizeof(deformedPoints2) / sizeof(int) );
 
-  // Setup the video stream
-  // Change the argument to 0 to read from webcam
   cv::VideoCapture cap(0);
   cv::Mat src;
 
-  // Read a frame initially to assign memory for the frame and calculate new height
   cap >> src;
   int height = src.rows;
   float IMAGE_RESIZE = (float)height/RESIZE_HEIGHT;
 
-    // Variables for Optical flow  calculation
   TermCriteria termcrit(TermCriteria::COUNT|TermCriteria::EPS,20,0.03);
   Size subPixWinSize(10,10), winSize(101,101);
   double eyeDistance, sigma;
@@ -61,7 +48,6 @@ int main(int argc, char** argv)
   {
     double t = (double)cv::getTickCount();
 
-    // Read an image and get the landmark points
     cap >> src;
     cv::resize(src, src, cv::Size(), 1.0/IMAGE_RESIZE, 1.0/IMAGE_RESIZE);
 
@@ -77,7 +63,6 @@ int main(int argc, char** argv)
       continue;
     }
 
-    ////////// Calculation of Optical flow and Stabilization of Landmark points ////////////
     if(!landmarksPrev.size())
     {
       landmarksPrev = landmarks;
@@ -99,11 +84,8 @@ int main(int argc, char** argv)
     std::vector<uchar> status;
     std::vector<float> err;
 
-    // Calculate Optical Flow based estimate of the point in this frame
-    calcOpticalFlowPyrLK(srcGrayPrev, srcGray, landmarksPrev, landmarksNext, status, err, winSize,
-                         5, termcrit, 0, 0.001);
+    calcOpticalFlowPyrLK(srcGrayPrev, srcGray, landmarksPrev, landmarksNext, status, err, winSize, 5, termcrit, 0, 0.001);
 
-    // Final landmark points are a weighted average of detected landmarks and tracked landmarks
     for (unsigned long k = 0; k < landmarks.size(); ++k)
     {
       double n = norm(landmarksNext[k] - landmarks[k]);
@@ -112,21 +94,17 @@ int main(int argc, char** argv)
       constrainPoint(landmarks[k], src.size());
     }
 
-    // Update varibales for next pass
+  
     landmarksPrev = landmarks;
     srcGrayPrev = srcGray.clone();
 
-    /////////// Finished Stabilization code   //////////////////////////////////
 
-    // Set the center to tip of chin
     Point2f center1 (landmarks[8]);
-    // Set the center to point on nose
+
     Point2f center2 (landmarks[28]);
 
-    // Variables for storing the original and deformed points
     std::vector<Point2f> srcPoints, dstPoints;
 
-    // Adding the original and deformed points using the landmark points
     for( int i = 0; i < anchorPointsArray.size(); i++)
     {
       srcPoints.push_back(landmarks[anchorPointsArray[i]]);
@@ -145,11 +123,9 @@ int main(int argc, char** argv)
       dstPoints.push_back(pt);
     }
 
-    // Adding the boundary points to keep the image stable globally
     getEightBoundaryPoints(src.size(), srcPoints);
     getEightBoundaryPoints(src.size(), dstPoints);
 
-    // Performing moving least squares deformation on the image using the points gathered above
     Mat dst = Mat::zeros(src.rows, src.cols, CV_8UC3);
     MLSWarpImage( src, srcPoints, dst, dstPoints, 0 );
 
@@ -157,7 +133,7 @@ int main(int argc, char** argv)
 
     imshow("Distorted",dst);
     int k = cv::waitKey(1);
-    // Quit if  ESC is pressed
+
     if (k == 27)
     {
       break;
