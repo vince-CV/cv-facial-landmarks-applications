@@ -12,5 +12,5 @@ cpp/Facial_Landmarks/Facial_Landmarks/Facial_Landmarks.vcxproj
 cpp/Facial_Landmarks/Facial_Landmarks/Facial_Landmarks.vcxproj.filters
 cpp/Facial_Landmarks/Facial_Landmarks/Facial_Landmarks.vcxproj.user
 
-Virtual Makeup/shape_predictor_68_face_landmarks.dat
+virtual makeup/shape_predictor_68_face_landmarks.dat
 
