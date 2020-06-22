@@ -34,18 +34,18 @@ Ensemble of Regression Trees: a collection of gradient tree boosting:
 
 ### Landmarks Applications
 1. Face Averaging: Normalization wrt size, similarity transform for landmarks, align 2 landmarks of eyes. Align other facial landmarks: use landmarks to divided images into triangular regions before averaging pixel values.
-![image](virtual makeup/img/Picture3.png)
+![image](img/Picture3.png)
 2. Face Morphing: Find point correspondences using Landmark Detection, Coordinate transformation, Delaunay triangulation and Warping images and alpha blending.
-![image](virtual makeup/img/Picture4.png)
+![image](img/Picture4.png)
 3. Radial Distortion (Bug eyes): 
 * Apply radial distortion to the eye patch: **a**. r_d = r+k\times r\times cos(pi\times r): to handle the artifact (curled corners) that outside r values: set distortion of 0, when r>0.5. **b**. Interpolate the points using remap function in opencv (pincushion distortion): r_d = r-k\times r\times cos(pi\times r).
 4. Head Pose Estimation: **a**. Estimate 3D object: finding 6 numbers: 3 rotaion and 3 translation; **b**. Get Pitch Roll Yaw angles from rotation vector (RQDecomposition).
 5. Swap Faces: Delaunay Triangulation + Affine warp triangles;
 6. Beardify Filter: Delaunay Triangulation + Affine warp triangles + Alpha Blending using a transparency mask.
 7. Aging Filter: Estimate Forehead Points + Predict based on current landmarks + Generate Mask using Convex hull.
-![image](virtual makeup/img/Picture5.png)
+![image](img/Picture5.png)
 8. Non-linear Deformations with Moving Least Square. For example the happify filter.
-![image](virtual makeup/img/Picture6.png)
+![image](img/Picture6.png)
 
 ### CapStone Projection: Virtual Makeup
 This project is trying to dig deeper for the potential application of AI models. We could see many successful application on market such Tictac, SnapChat... 
@@ -53,7 +53,7 @@ Interesting applications of facial features and landmarks. In this project, you 
 - Apply Lipstick
 - Apply Eyebrows deepen
 - Apply Blush
-![image](virtual makeup/img/Picture7.png)
+![image](img/Picture7.png)
 
 
 
