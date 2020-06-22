@@ -8,10 +8,10 @@ This repo contains item:
 Ensemble of Regression Trees: a collection of gradient tree boosting:
 1. Cascade of Regression: input a current shape estimae & facial image, and output the change in the current estimate that will produce a refined shape estimate.
 2. Learning a Regressor: **a**. for each training image, choose an initial shapes by randomly sampling shapes from the shapes in the training set; **b**. calculate residual for each shape pair; **c**. train the regressor, so on so forth.
-![image](/virtual makeup/img/Picture1.png)
+![image](img/Picture1.png)
 3. Regressor: **a**. each regressor is made up of K weak regressors; **b**. each weak regressor has a regression treem and the regressor is trained using gradient boosting; **c**. at each node of decision tree, test a feature and decide to either go left and right.
 4. Features used in landmarks detector: pixel differences between two randomly selected pixels on the face;
-![image](/virtual makeup/img/Picture2.png)
+![image](img/Picture2.png)
 
 
 
